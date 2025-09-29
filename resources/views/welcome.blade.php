@@ -21,6 +21,32 @@
     </head>
     <body>
         @include('layouts.header')
+        
+        {{-- Display Success Message --}}
+        @if(session('success'))
+            <div style="position: fixed; top: 20px; right: 20px; background: #d4edda; color: #155724; padding: 16px; border: 1px solid #c3e6cb; border-radius: 8px; max-width: 400px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                    <span style="flex: 1;">✅ {{ session('success') }}</span>
+                    <button onclick="this.parentElement.parentElement.style.display='none'" 
+                            style="background: none; border: none; font-size: 18px; cursor: pointer; color: #155724; padding: 0; margin: 0; line-height: 1;">
+                        ×
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div style="position: fixed; top: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 16px; border: 1px solid #f5c6cb; border-radius: 8px; max-width: 400px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                    <span style="flex: 1;">❌ {{ session('error') }}</span>
+                    <button onclick="this.parentElement.parentElement.style.display='none'" 
+                            style="background: none; border: none; font-size: 18px; cursor: pointer; color: #721c24; padding: 0; margin: 0; line-height: 1;">
+                        ×
+                    </button>
+                </div>
+            </div>
+        @endif
+
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
@@ -28,8 +54,38 @@
             <h1 style="font-size: 3rem; font-weight: 600">Welcome</h1>
             <p style="font-size: 1.5rem; font-weight: 400">This is a Blog system</p>
         </main>
-        <section>
-            
+        <section style="min-height:100vh; color:#1f2937; padding:40px 24px;">
+            <div style="max-width:1200px; margin:0 auto;">
+                <div class="flex items-center justify-between">
+                    <h2 style="font-size:28px; font-weight:700; margin-bottom:28px;">Latest Posts</h2>
+                    @auth
+                        <a href="{{ route('posts.form') }}" style="background:#3b82f6; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:500; transition:background 0.3s;">
+                            Create Post
+                        </a>
+                    @endauth
+                </div>
+                @if($posts->count())
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:24px;">
+                        @foreach($posts as $post)
+                            <article style="background:#fff; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:24px; transition:box-shadow 0.3s; display:flex; flex-direction:column; justify-content:space-between; min-height:350px;">
+                                @if($post->image)
+                                    <img src="{{ $post->image }}" style="width:100%; border-radius:12px; margin-bottom:12px; max-height:250px; object-fit:cover;">
+                                    @else
+                                        <p class="flex items-center justify-center"
+                                        style="background: #6b7280; color:#fff; padding:4px 8px; border-radius:8px; height: 100%; font-size: 28px; font-weight: 500;">There is no image</p>
+                                    @endif
+                                    <div style="margin-top: 20px;">
+                                        <h3 style="font-size:20px; font-weight:600; margin-bottom:12px;">{{ $post->title }}</h3>
+                                        <p style="font-size:16px; margin-bottom:12px; line-height:1.5;">{{ $post->description }}</p>
+                                    </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @else
+                    <p style="color:#6b7280;">No posts available yet.</p>
+                @endif
+            </div>
         </section>
+
     </body>
 </html>

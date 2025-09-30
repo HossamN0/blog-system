@@ -9,8 +9,9 @@ Route::get('/', function (PostController $postController) {
     return view('welcome', compact('posts'));
 })->name('welcome');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/dashboard', function (PostController $postController) {
+    $posts = $postController->index();
+    return view('dashboard', compact('posts'));
 })->middleware(['auth', 'verified', 'is_admin'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

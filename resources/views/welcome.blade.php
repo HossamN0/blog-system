@@ -81,6 +81,8 @@
                                     </div>
                             </article>
                         @endforeach
+                    </div>
+                    <div style="margin-top: 50px;">
                         {{ $posts->links() }}
                     </div>
                 @else

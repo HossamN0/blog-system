@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categories;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -13,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::orderBy('created_at', 'desc')->get();
+        return Post::orderBy('created_at', 'desc')->paginate(6);
     }
 
     /**
@@ -35,13 +36,17 @@ class PostController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Create the post
+        $imagePath = null;
+        if($request->hasFile('image')){
+            $imagePath = Storage::put('posts', $validated['image']);
+        }
+
         Post::create([
             'user_id' => auth()->id(),
             'category_id' => $validated['category_id'],
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'image' => null,
+            'image' => $imagePath,
         ]);
 
         return redirect()->route('welcome')->with('success', 'Post created successfully!');

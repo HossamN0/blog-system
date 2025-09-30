@@ -9,6 +9,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -69,7 +70,7 @@
                         @foreach($posts as $post)
                             <article style="background:#fff; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:24px; transition:box-shadow 0.3s; display:flex; flex-direction:column; justify-content:space-between; min-height:350px;">
                                 @if($post->image)
-                                    <img src="{{ $post->image }}" style="width:100%; border-radius:12px; margin-bottom:12px; max-height:250px; object-fit:cover;">
+                                    <img src="{{ asset('storage/'.$post->image) }}" style="width:100%; border-radius:12px; margin-bottom:12px; max-height:250px; object-fit:cover;">
                                     @else
                                         <p class="flex items-center justify-center"
                                         style="background: #6b7280; color:#fff; padding:4px 8px; border-radius:8px; height: 100%; font-size: 28px; font-weight: 500;">There is no image</p>
@@ -80,6 +81,7 @@
                                     </div>
                             </article>
                         @endforeach
+                        {{ $posts->links() }}
                     </div>
                 @else
                     <p style="color:#6b7280;">No posts available yet.</p>

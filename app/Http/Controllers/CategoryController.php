@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -12,7 +12,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Categories::paginate(10);
+        $categories = Category::paginate(10);
         return view('category.index', compact('categories'));
     }
 
@@ -21,7 +21,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.create');
+        return view('category.categoryForm');
     }
 
     /**
@@ -33,12 +33,12 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $category = Categories::where('name', $validated['name'])->first();
+        $category = Category::where('name', $validated['name'])->first();
         if ($category) {
             return redirect()->route('category.create')->with('error', 'Category already exists!');
         }
 
-        Categories::create([
+        Category::create([
             'name' => $validated['name'],
         ]);
 
@@ -50,7 +50,8 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        return view('category.categoryForm', compact('category'));
     }
 
     /**
@@ -66,7 +67,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category = Category::findOrFail($id);
+        $existingCategory = Category::where('name', $validated['name'])->first();
+        if ($existingCategory && $existingCategory->id != $category->id) {
+            return redirect()->route('category.show', $id)->with('error', 'Category name already exists!');
+        }
+
+        $category->update([
+            'name' => $validated['name'],
+        ]);
+
+        return redirect()->route('category')->with('success', 'Category updated successfully!');
     }
 
     /**
@@ -74,9 +89,12 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Categories::find($id);
-
-        // $category->delete();
-        // return redirect()->route('category')->with('success', 'Category deleted successfully!');
+        $category = Category::findOrFail($id);
+        $relatedPosts = Category::find($id)->posts;
+        if($relatedPosts->count() > 0){
+            return redirect()->route('category')->with('error', 'Category cannot be deleted because it has related posts!');
+        }
+        $category->delete();
+        return redirect()->route('category')->with('success', 'Category deleted successfully!');
     }
 }

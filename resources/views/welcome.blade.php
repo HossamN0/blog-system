@@ -56,6 +56,6 @@
             <p style="font-size: 1.5rem; font-weight: 400">This is a Blog system</p>
         </main>
 
-        @include('shared.showPosts')
+        @include('post.showPosts')
     </body>
 </html>

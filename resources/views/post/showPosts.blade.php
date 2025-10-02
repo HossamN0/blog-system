@@ -25,6 +25,7 @@
                         <div style="margin-top: 20px;">
                             <h3 style="font-size:20px; font-weight:600; margin-bottom:12px;">{{ $post->title }}</h3>
                             <p style="font-size:16px; margin-bottom:12px; line-height:1.5;">{{ $post->description }}</p>
+                            <p style="margin: 10px 0px;">Category Name: {{ $post->category->name }}</p>
                             @if(Auth::user()?->role === 'admin')
                                 <div class="flex justify-between items-center">
                                     <form method="get" action="{{ route('post.show', $post->id) }}">

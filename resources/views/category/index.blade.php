@@ -17,13 +17,19 @@
                 @foreach ($categories as $category)
                     <div class="p-6 bg-white border-b border-gray-200 flex justify-between items-center">
                         <h3 class="font-bold text-lg mb-2">{{ $category->name }}</h3>
-                        <div>
+                        <div class="flex items-center" style="gap: 10px;">
                             <form method="post" action="{{ route('category.delete', $category->id) }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
                                     style="background-color: red; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; color: white;">
                                     Delete Category
+                                </button>
+                            </form>
+                            <form action="{{ route('category.show', $category->id) }}" method="get">
+                                <button type="submit"
+                                    style="background-color: green; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; color: white; margin-left: 10px;">
+                                    Edit Category
                                 </button>
                             </form>
                         </div>

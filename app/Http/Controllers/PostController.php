@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +14,12 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::orderBy('created_at', 'desc')->paginate(6);
+        $posts = Post::with([
+            'category' => function ($query) {
+                $query->select('id', 'name');
+            }
+        ])->orderBy('created_at', 'desc')->paginate(6);
+        return $posts;
     }
 
     /**
@@ -23,8 +28,8 @@ class PostController extends Controller
 
     public function postForm()
     {
-        $categories = Categories::all();
-        return view('shared.postForm', compact('categories'));
+        $categories = Category::all();
+        return view('post.postForm', compact('categories'));
     }
 
     public function create(Request $request)
@@ -65,9 +70,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        $categories = Categories::all();
+        $categories = Category::all();
         $post = Post::findOrFail($id);
-        return view('shared.postForm', compact('post', 'categories'));
+        return view('post.postForm', compact('post', 'categories'));
     }
 
     /**

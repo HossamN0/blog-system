@@ -29,9 +29,11 @@ Route::middleware(['auth', 'verified', 'is_admin'])->group(function () {
     Route::delete('/delete-post/{id}', [PostController::class, 'destroy'])->name('post.delete');
 
     Route::get('/category', [CategoryController::class, 'index'])->name('category');
-    Route::get('/create_category', [CategoryController::class, 'create'])->name('category.create');
-    Route::post('/create_category', [CategoryController::class, 'store'])->name('category.create');
-    Route::delete('/delete_category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+    Route::get('/create-category', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/create-category', [CategoryController::class, 'store'])->name('category.create');
+    Route::delete('/delete-category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+    Route::get('/edit-category/{id}', [CategoryController::class, 'show'])->name('category.show');
+    Route::put('/edit-category/{id}', [CategoryController::class, 'update'])->name('category.edit');
 });
 
 // Route::get('posts', [PostController::class, 'index']);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -8,11 +9,6 @@ Route::get('/', function (PostController $postController) {
     $posts = $postController->index();
     return view('welcome', compact('posts'));
 })->name('welcome');
-
-Route::get('/dashboard', function (PostController $postController) {
-    $posts = $postController->index();
-    return view('dashboard', compact('posts'));
-})->middleware(['auth', 'verified', 'is_admin'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,6 +19,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/create-post', [PostController::class, 'create'])->name('posts.create');
 });
 
-Route::get('posts', [PostController::class, 'index']);
+Route::middleware(['auth', 'verified', 'is_admin'])->group(function () {
+    Route::get('/dashboard', function (PostController $postController) {
+        $posts = $postController->index();
+        return view('dashboard', compact('posts'));
+    })->name('dashboard');
+    Route::get('/edit-post/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::put('/edit-post/{id}', [PostController::class, 'update'])->name('post.edit');
+    Route::delete('/delete-post/{id}', [PostController::class, 'destroy'])->name('post.delete');
+
+    Route::get('/category', [CategoryController::class, 'index'])->name('category');
+    Route::get('/create_category', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('/create_category', [CategoryController::class, 'store'])->name('category.create');
+    Route::delete('/delete_category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+});
+
+// Route::get('posts', [PostController::class, 'index']);
 
 require __DIR__ . '/auth.php';

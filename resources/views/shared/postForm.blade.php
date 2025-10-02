@@ -23,7 +23,7 @@
 <body>
     @include('layouts.header')
     <main style="margin-top: 100px; margin-bottom: 20px;">
-        <form method="POST" action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.create') }}"
+        <form method="POST" action="{{ isset($post) ? route('post.edit', $post->id) : route('posts.create') }}"
             enctype="multipart/form-data"
             style="display:flex; flex-direction:column; gap:16px; max-width:600px; margin:auto;">
             @csrf
@@ -64,7 +64,7 @@
                 <label style="display:block; font-weight:600; margin-bottom:6px;">Image</label>
                 <input type="file" name="image" style="display:block; margin-bottom:8px;">
                 @if(isset($post) && $post->image)
-                    <img src="{{ $post->image }}" alt="Post Image" style="width:120px; border-radius:8px; margin-top:8px;">
+                    <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" style="width:120px; border-radius:8px; margin-top:8px;">
                 @endif
             </div>
 

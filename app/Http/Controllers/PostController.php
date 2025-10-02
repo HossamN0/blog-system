@@ -37,7 +37,7 @@ class PostController extends Controller
         ]);
 
         $imagePath = null;
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $imagePath = Storage::put('posts', $validated['image']);
         }
 
@@ -65,7 +65,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $categories = Categories::all();
+        $post = Post::findOrFail($id);
+        return view('shared.postForm', compact('post', 'categories'));
     }
 
     /**
@@ -81,7 +83,30 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $imagePath = $post->image;
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::delete($post->image);
+            }
+            $imagePath = Storage::put('posts', $validated['image']);
+        }
+
+        $post->update([
+            'category_id' => $validated['category_id'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'image' => $imagePath,
+        ]);
+
+        return redirect()->route('welcome')->with('success', 'Post updated successfully!');
     }
 
     /**
@@ -89,6 +114,11 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        if ($post->image) {
+            Storage::delete($post->image);
+        }
+        $post->delete();
+        return redirect()->route('welcome')->with('success', 'Post deleted successfully!');
     }
 }

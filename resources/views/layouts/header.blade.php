@@ -9,7 +9,7 @@
         <!-- Navigation -->
         <nav>
             @auth
-                <a href="{{ route('welcome') }}" class="hover:text-gray-300">Profile</a>
+                <!-- <a href="{{ route('welcome') }}" class="hover:text-gray-300">Profile</a> -->
                 @if(Auth::user()?->role === 'admin')
                     <a style="margin-left: 20px" href="{{ route('dashboard') }}" class="hover:text-gray-300">Dashboard</a>
                 @endif

@@ -15,7 +15,7 @@
                     <article
                         style="background:#fff; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.1); padding:24px; transition:box-shadow 0.3s; display:flex; flex-direction:column; justify-content:space-between; min-height:350px;">
                         @if($post->image)
-                            <img src="{{ asset('storage/' . $post->image) }}"
+                            <img src="{{ env('R2_URL') . '/' . $post->image }}" alt="Post Image"
                                 style="width:100%; border-radius:12px; margin-bottom:12px; max-height:250px; object-fit:cover;">
                         @else
                             <p class="flex items-center justify-center"

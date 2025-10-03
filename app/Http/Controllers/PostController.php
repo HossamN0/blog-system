@@ -43,7 +43,7 @@ class PostController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = Storage::put('posts', $validated['image']);
+            $imagePath = $request->file('image')->store('posts', 'r2');
         }
 
         Post::create([
@@ -99,9 +99,9 @@ class PostController extends Controller
         $imagePath = $post->image;
         if ($request->hasFile('image')) {
             if ($post->image) {
-                Storage::delete($post->image);
+                Storage::disk('r2')->delete($post->image);
             }
-            $imagePath = Storage::put('posts', $validated['image']);
+            $imagePath = $request->file('image')->store('posts', 'r2');
         }
 
         $post->update([
@@ -121,7 +121,7 @@ class PostController extends Controller
     {
         $post = Post::findOrFail($id);
         if ($post->image) {
-            Storage::delete($post->image);
+            Storage::disk('r2')->delete($post->image);
         }
         $post->delete();
         return redirect()->route('welcome')->with('success', 'Post deleted successfully!');

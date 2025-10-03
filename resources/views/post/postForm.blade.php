@@ -64,7 +64,7 @@
                 <label style="display:block; font-weight:600; margin-bottom:6px;">Image</label>
                 <input type="file" name="image" style="display:block; margin-bottom:8px;">
                 @if(isset($post) && $post->image)
-                    <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" style="width:120px; border-radius:8px; margin-top:8px;">
+                    <img src="{{ env('R2_URL') . '/' . $post->image }}" alt="Post Image" style="width:120px; border-radius:8px; margin-top:8px;">
                 @endif
             </div>
 
